@@ -8,7 +8,7 @@ class FeatureGateJobMiddleware
 {
     public function handle($job, $next)
     {
-        $decision = app(FeatureEvaluator::class)->evaluateExecution($job);
+        $decision = app(FeatureEvaluator::class)->evaluateExecution($job, 'handle');
 
         if (!$decision->allowed) {
             return match ($decision->action) {
