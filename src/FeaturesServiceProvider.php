@@ -36,6 +36,14 @@ class FeaturesServiceProvider extends ServiceProvider
         Queue::createPayloadUsing(function ($connection, $queue, $payload) {
             $job = $payload['data']['command'] ?? null;
 
+            if (is_string($job)) {
+                try {
+                    $job = unserialize($job);
+                } catch (\Throwable) {
+                    return [];
+                }
+            }
+
             if (!is_object($job)) {
                 return [];
             }
@@ -62,6 +70,15 @@ class FeaturesServiceProvider extends ServiceProvider
 
         // HTTP middleware alias
         Route::aliasMiddleware('features', FeatureGateMiddleware::class);
+
+        // Bus dispatch middleware
+        $this->app->extend(\Illuminate\Contracts\Bus\Dispatcher::class, function ($dispatcher) {
+            return new Enforcement\Queue\FeatureGateDispatcherDecorator($dispatcher);
+        });
+
+        $this->app->extend(\Illuminate\Bus\Dispatcher::class, function ($dispatcher) {
+            return new Enforcement\Queue\FeatureGateDispatcherDecorator($dispatcher);
+        });
 
         // Console commands
         if ($this->app->runningInConsole()) {

@@ -38,6 +38,10 @@ class FeatureEvaluator
      */
     public function evaluateExecution(object $job, ?string $method = null): FeatureDecision
     {
+        if ($method === null && method_exists($job, 'handle')) {
+            $method = 'handle';
+        }
+
         $attributes = $this->resolver->resolve($job, $method);
 
         foreach ($attributes as $attr) {

@@ -2,7 +2,7 @@
 
 namespace AyupCreative\Features\Middleware\Jobs;
 
-use AyupCreative\Features\FeatureEvaluator;
+use AyupCreative\Features\Evaluation\FeatureEvaluator;
 
 /**
  * Use on jobs to check for feature gate status.
@@ -16,7 +16,7 @@ class FeatureGateJobMiddleware
 {
     public function handle($job, $next)
     {
-        $decision = app(FeatureEvaluator::class)->evaluate($job);
+        $decision = app(FeatureEvaluator::class)->evaluateExecution($job, 'handle');
 
         if (!$decision->allowed) {
             return match ($decision->action) {
@@ -27,6 +27,6 @@ class FeatureGateJobMiddleware
             };
         }
 
-        $next($job);
+        return $next($job);
     }
 }
