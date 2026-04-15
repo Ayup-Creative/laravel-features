@@ -7,7 +7,9 @@
         "psr-4": {
             "AyupCreative\\Features\\": "src/"
         },
-        "files": ["helpers.php"]
+        "files": [
+            "helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
