@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/Ayup-Creative/laravel-features/compare/v2.0.0...v2.1.0) (2026-05-14)
+
+
+### Features
+
+* specify route level middleware with feature ([0567996](https://github.com/Ayup-Creative/laravel-features/commit/05679964d4026053dab8ec5a0eb136858ff23a7e))
+
 ## [2.0.0](https://github.com/Ayup-Creative/laravel-features/compare/v1.0.3...v2.0.0) (2026-05-14)
 
 
