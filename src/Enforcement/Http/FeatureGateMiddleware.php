@@ -14,8 +14,12 @@ class FeatureGateMiddleware
     {
     }
 
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, ?string $feature = null)
     {
+        if ($feature !== null && features()->enabled($feature) !== true) {
+            return abort(404);
+        }
+
         $controller = $request->route()->getController();
         $method = $request->route()->getActionMethod();
 

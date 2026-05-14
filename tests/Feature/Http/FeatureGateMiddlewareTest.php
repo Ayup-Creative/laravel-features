@@ -79,6 +79,30 @@ class FeatureGateMiddlewareTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_it_allows_route_middleware_if_feature_enabled()
+    {
+        app(FeatureManager::class)->enable('example');
+
+        Route::get('/route-middleware', [NoFeatureController::class, 'index'])
+            ->middleware('features:example')
+            ->name('route-middleware');
+
+        $response = $this->get('/route-middleware');
+        $response->assertStatus(200);
+    }
+
+    public function test_it_aborts_route_middleware_if_feature_disabled()
+    {
+        app(FeatureManager::class)->disable('example');
+
+        Route::get('/route-middleware', [NoFeatureController::class, 'index'])
+            ->middleware('features:example')
+            ->name('route-middleware');
+
+        $response = $this->get('/route-middleware');
+        $response->assertStatus(404);
+    }
 }
 
 class NoFeatureController {
