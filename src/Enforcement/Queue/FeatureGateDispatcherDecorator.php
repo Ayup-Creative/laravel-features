@@ -3,8 +3,11 @@
 namespace AyupCreative\Features\Enforcement\Queue;
 
 use AyupCreative\Features\Evaluation\FeatureEvaluator;
+use Illuminate\Bus\ChainedBatch;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Bus\QueueingDispatcher;
+use Illuminate\Foundation\Bus\PendingChain;
+use Illuminate\Support\Collection;
 use RuntimeException;
 
 class FeatureGateDispatcherDecorator implements QueueingDispatcher
@@ -91,6 +94,15 @@ class FeatureGateDispatcherDecorator implements QueueingDispatcher
         }
 
         return $this->dispatcher->dispatchSync($command, $handler);
+    }
+
+    public function chain($jobs = null)
+    {
+        if($this->dispatcher instanceof Dispatcher) {
+            return $this->dispatcher->chain($jobs);
+        }
+
+        throw new \BadMethodCallException("Underlying dispatcher does not support chaining.");
     }
 
     public function __call($method, $parameters)
